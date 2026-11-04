@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Flight Tracker Admin</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="top"><div><h1>My flights</h1><div class="sub">Only you can see this page</div></div>
+  <button class="ghost hidden" id="logout">Sign out</button></header>
+<main>
+  <section class="card" id="login">
+    <h2>Sign in</h2>
+    <div class="row"><input type="password" id="pw" placeholder="Admin password" autocomplete="current-password" style="flex:1">
+      <button id="signin">Sign in</button></div>
+    <div class="note" id="loginMsg"></div>
+  </section>
+
+  <div id="panel" class="hidden" style="display:grid;gap:16px">
+    <section class="card">
+      <h2>Family link</h2>
+      <div class="row"><input id="familyLink" readonly style="flex:1"><button id="copyLink">Copy</button>
+        <a href="#" id="openLink" target="_blank" rel="noopener"><button class="ghost">Open</button></a></div>
+      <div class="note">Send this link to family. Anyone with it can see your current and past flights, never upcoming ones.</div>
+    </section>
+
+    <section class="card">
+      <h2>Import schedule from FLICA</h2>
+      <ol class="note" style="padding-left:18px;margin:0 0 10px">
+        <li>Open your monthly schedule on FLICA.</li>
+        <li>Select all the text on the page (on iPad: press and hold some text, tap <b>Select All</b>), then <b>Copy</b>.</li>
+        <li>Paste it below and tap <b>Read schedule</b>. Nothing is saved until you check it and tap Save.</li>
+      </ol>
+      <textarea id="roster" placeholder="Paste your FLICA schedule here…"></textarea>
+      <div class="row" style="margin-top:8px">
+        <label>Times on the roster are
+          <select id="timeMode"><option value="local">Local at each airport (L)</option><option value="utc">UTC / Zulu</option></select></label>
+        <button id="parse" style="align-self:end">Read schedule</button>
+      </div>
+      <div id="preview" class="hidden" style="margin-top:14px">
+        <div class="table-wrap"><table><thead><tr><th></th><th>Date</th><th>Flight</th><th>Route</th><th>Departs (UTC)</th><th>Arrives (UTC)</th><th>Callsign</th></tr></thead><tbody></tbody></table></div>
+        <div class="note warn" id="skipped"></div>
+        <div class="row" style="margin-top:10px"><button id="save">Save checked flights</button><span class="note" id="saveMsg"></span></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Add one flight by hand</h2>
+      <div class="row">
+        <label>Date <input type="date" id="mDate"></label>
+        <label>Flight # <input id="mNum" placeholder="712" size="6"></label>
+        <label>From <input id="mDep" placeholder="YVR" size="4" maxlength="3"></label>
+        <label>Departs (local) <input id="mOut" placeholder="1620" size="5" maxlength="5"></label>
+        <label>To <input id="mArr" placeholder="YYZ" size="4" maxlength="3"></label>
+        <label>Arrives (local) <input id="mIn" placeholder="2321" size="5" maxlength="5"></label>
+        <label style="flex-direction:row;display:flex;align-items:center;gap:6px;align-self:end"><input type="checkbox" id="mDh"> Deadhead</label>
+        <button id="addOne" style="align-self:end">Add</button>
+      </div>
+      <div class="note" id="addMsg"></div>
+    </section>
+
+    <section class="card">
+      <div class="row between"><h2 style="margin:0">Your flights</h2>
+        <div class="row"><button class="ghost" id="pollNow">Check live positions now</button><button class="ghost" id="reload">Refresh</button></div></div>
+      <div class="note" id="pollMsg"></div>
+      <div class="table-wrap"><table id="flights"><thead><tr><th>Date</th><th>Flight</th><th>Route</th><th>Status</th><th>Callsign</th><th></th></tr></thead><tbody></tbody></table></div>
+    </section>
+  </div>
+</main>
+<script src="/admin.js"></script>
+</body>
+</html>

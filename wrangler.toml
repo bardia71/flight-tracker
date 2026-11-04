@@ -1,0 +1,26 @@
+name = "flight-tracker"
+main = "src/worker.js"
+compatibility_date = "2026-10-01"
+
+# Checks for live flights every minute (free plan allows this).
+[triggers]
+crons = ["* * * * *"]
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+run_worker_first = ["/api/*", "/f/*"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "flight-tracker"
+database_id = "REPLACE_WITH_DATABASE_ID"
+
+[vars]
+DISPLAY_NAME = "Bardia"
+AIRLINE_ICAO = "WJA"
+AIRLINE_IATA = "WS"
+# Secrets (set with `npx wrangler secret put NAME`, never stored here):
+#   ADMIN_KEY  - your password for /admin
+#   FAMILY_KEY - the secret part of the family link
+#   NTFY_TOPIC - optional, the topic name for take-off/landing phone alerts
