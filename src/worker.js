@@ -1,6 +1,15 @@
 import { airport, distanceNm } from './geo.js';
 import { poll } from './tracker.js';
 import { parseRoster } from './roster.js';
+import SCHEMA from '../schema.sql';
+
+// Create the tables on first use, so setup needs no database console steps.
+let ready = null;
+function ensureSchema(env) {
+  ready ||= env.DB.batch(SCHEMA.split(';').map((q) => q.replace(/--.*$/gm, '').trim()).filter(Boolean)
+    .map((q) => env.DB.prepare(q))).catch((e) => { ready = null; throw e; });
+  return ready;
+}
 
 const json = (data, status = 200) => new Response(JSON.stringify(data), {
   status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' },
@@ -123,6 +132,7 @@ async function admin(env, req, url, path) {
 export default {
   async fetch(req, env) {
     const url = new URL(req.url);
+    if (url.pathname.startsWith('/api/')) await ensureSchema(env);
     const p = url.pathname;
     let m;
     if ((m = p.match(/^\/api\/f\/([^/]+)\/(status|flights|track\/(\d+))$/))) {
@@ -140,6 +150,6 @@ export default {
     return env.ASSETS.fetch(req);
   },
   async scheduled(_event, env, ctx) {
-    ctx.waitUntil(poll(env));
+    ctx.waitUntil(ensureSchema(env).then(() => poll(env)));
   },
 };

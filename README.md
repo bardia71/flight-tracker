@@ -35,7 +35,7 @@ Upcoming flights are never shown to family.
 npm install
 npx wrangler login
 npx wrangler d1 create flight-tracker          # paste the database_id into wrangler.toml
-npx wrangler d1 execute flight-tracker --remote --file schema.sql
+# tables are created automatically on first use
 npx wrangler secret put ADMIN_KEY              # your admin password
 npx wrangler secret put FAMILY_KEY             # long random text for the family link
 npx wrangler secret put NTFY_TOPIC             # optional: alerts topic name
